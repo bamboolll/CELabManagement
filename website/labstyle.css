@@ -1,0 +1,53 @@
+div#page {
+  border:1px solid purple;
+  width:100%;
+  margin:0 auto;
+  text-align:left;
+  position:relative
+}
+div#header {
+	background:#AABBFF;
+	border:0px solid red;
+	width:100%;
+	height:50px
+}
+h1 {
+	margin:0;
+	padding:0;
+	text-align:center;
+	color:purple
+}
+h2 {
+	margin:0;
+	padding:0;
+	text-align:center;
+	color:blue
+}
+div#leftmenu {
+	border:0px solid green;
+	background:#AABBFF;
+	width:200px;
+	float:left;
+	min-height:800px;
+	margin:1px 0 1px 0px
+}
+div#rightmenu {
+	border:0px solid green;
+	background:#AABBFF;
+	width:200px;
+	float:right;
+	min-height:800px;
+	margin:1px 0 1px 0px
+}
+div#content {
+	background-image:url('laboratory.jpg');
+	border:0px solid blue;
+	margin:1px 0 1px 201px;
+	min-height:800px
+}
+div#footer {
+	border:0px solid red;
+	width:100%;
+	height:30px
+}
+
