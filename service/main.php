@@ -2,6 +2,8 @@
 error_reporting(E_ALL | ~NOTICE);
 ini_set('display_errors', TRUE);
 include 'info_func.php';
+include 'borrow_func.php';
+include 'lablog_func.php';
 
 
 
@@ -55,6 +57,31 @@ echo phpversion();
     echo "<br>";
     
     
+    echo "<br>=================<br>";
+    $name=getAllDevices($file_db);
+    print_r($name);
+    
+    echo "<br>=================<br>";
+    $name=getDevicesRow($file_db,0);
+    print_r($name);
+	
+	echo "<br>=================<br>";
+    $name=getLogWithStatus($file_db,0);
+    print_r($name);
+    echo "<br>=================<br>";
+    //test insert Log
+    $log1  = new LogEntry();
+    $log1->unit_id=1;
+    $log1->borrower_name="Tran Van A";
+    $log1->borrower_id = "50600818";
+    $log1->borrow_type = 0; //at Lab room
+    $log1->status_id = 0; //request only.
+    $log1->receive_date = date ("Y-m-d H:i:s");
+    print_r($log1);
+    $ret=putNewLogEntry($file_db,$log1);
+    
+	
+	
     
     
     

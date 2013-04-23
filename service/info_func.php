@@ -48,4 +48,46 @@ function getBorrowStatusDescription($db,$id)
 	return $name;
 }
 
+
+/**
+ * Get list of devices from DeviceName table
+ * $db database
+ */
+function getAllDevices($db)
+{
+	$all="";
+	$query="SELECT * FROM DeviceName";
+	try{
+		$result = $db->query($query);
+		
+		$all = $result->fetchAll(PDO::FETCH_ASSOC);
+	}catch(PDOException $e)
+	{
+		echo $e->getMessage();
+	}
+	return $all;
+}
+
+
+/**
+ * Get list of devices from DeviceName table
+ * $db database
+ * $id device id;
+ */
+function getDevicesRow($db,$id)
+{
+	$all="";
+	$query="SELECT * FROM DeviceName WHERE device_id=".$id;
+	try{
+		$result = $db->query($query);
+		
+		$all = $result->fetchAll(PDO::FETCH_ASSOC);
+	}catch(PDOException $e)
+	{
+		echo $e->getMessage();
+	}
+	return $all;
+}
+
+
 ?>

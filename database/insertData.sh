@@ -28,4 +28,3 @@ do
 	done
 	devId=`expr $devId + 1`
 done 7< ${inputData}
-
