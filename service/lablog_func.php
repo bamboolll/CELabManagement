@@ -1,16 +1,5 @@
 <?php
 
-class LogEntry {
-	public $log_id = "";
-	public $unit_id = "";
-	public $borrower_name = "";
-	public $borrower_id = "";
-	public $receive_date = "";
-	public $return_date = "";
-	public $borrow_type = "";
-	public $status_id = "";
-}
-
 
 /**
  * Put new Log with LogEntry structure
@@ -25,8 +14,8 @@ function putNewLogEntry($db, $entry)
 	
 	$lastID= getLastLogEntry($db)+1;
 	
-	$query="INSERT INTO LabLog(log_id,unit_id,borrower_name,borrower_id,receive_date,return_date,borrow_type,status_id)
-	VALUES(:f0,:f1,:f2,:f3,:f4,:f5,:f6,:f7)";
+	$query="INSERT INTO LabLog(log_id,unit_id,borrower_name,borrower_id,receive_date,return_date,borrow_type,status_id,log_description)
+	VALUES(:f0,:f1,:f2,:f3,:f4,:f5,:f6,:f7,:f8)";
 	try{
 		$stmt = $db->prepare($query);
 		$stmt->bindParam(':f0',$lastID,PDO::PARAM_INT);
@@ -37,6 +26,7 @@ function putNewLogEntry($db, $entry)
 		$stmt->bindParam(':f5',$entry->return_date,PDO::PARAM_STR);
 		$stmt->bindParam(':f6',$entry->borrow_type,PDO::PARAM_INT);
 		$stmt->bindParam(':f7',$entry->status_id,PDO::PARAM_INT);
+		$stmt->bindParam(':f8',$entry->log_description,PDO::PARAM_STR);
 		$stmt->execute();
 		$affected_rows=$stmt->rowCount();
 		print_r($affected_rows);

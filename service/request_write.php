@@ -1,9 +1,8 @@
 <?php
-
-
 //check user power
 include_once 'json_func.php';
 include_once 'global.php';
+include_once 'lablog_func.php';
 
 printdevln("request_read.php called");
 
@@ -27,13 +26,13 @@ switch($_GET['aim']){
 			returnObject($all);
 		else
 			returnFAIL();
-	break;
+		break;
 	case "device_unit":
-	/**Scope
-	 *    all: all device unit
-	 *    total: all device uit of specified devID
-	 *    available: all device unit which is current available. 
-	 */
+		/**Scope
+		 *    all: all device unit
+		 *    total: all device uit of specified devID
+		 *    available: all device unit which is current available.
+		 */
 		$scope = $_GET['scope'];
 		$ret;
 		if(!$scope){
@@ -42,68 +41,61 @@ switch($_GET['aim']){
 		}
 		switch($scope){
 			case "all":
-			break;
+				break;
 			case "total":
 				$id = $_GET['dev_id'];
 				$ret = getAllDeviceUnitByID($db,$id);
-			break;
+				break;
 			case "available":
 				$id = $_GET['dev_id'];
 				$ret = getAvailableDeviceUnitByID($db,$id);
-				
-			break;
+
+				break;
 			default:
 		}
-		
+
 		if($ret)
 			returnObject($ret);
 		else
 			returnFAIL();
-	break;
+		break;
 	case "lab_log":
-	/**
-	 * scope
-	 *   all: all log
-	 *   scope: id
-	 *   search: with more parameters follow
-	 *   pending: wait for accept (both borrow and return).
-	 * 	 returned: da tra
-	 *   borrowed: chua tra.
-	 */
+		/**
+		 * scope
+		 *   all: all log
+		 *   scope: id
+		 *   search: with more parameters follow
+		 *   pending: wait for accept (both borrow and return).
+		 * 	 returned: da tra
+		 *   borrowed: chua tra.
+		 */
 		$scope = $_GET['scope'];
 		$ret;
-		$btype = $_GET['btype'];
-		if($btype){
-			if($btype == "home")
-				$btype = 1;
-			else if($btype == "lab")
-				$btype = 0;
-			else
-				$btype = "";
-		}
 		if(!$scope){
 			returnFAIL();
 			exit();
 		}
 		switch($scope){
-			case "all":
-			//TODO
-			break;
-			case "search":
-			//TODO
-			break;
-			case "pending":
-				$ret = getAllPendingLogsByType($db,$btype);
-			break;
-			case "returned":
-				$ret = getAllLogsByTypeStatus($db,$btype,3);
-			break;
-			case "borrowed":
-				$ret = getAllLogsByTypeStatus($db,$btype,1);
-			break;
+			case "request_borrow":
+				//get parameter
+				$entry = new LogEntry();
+				$entry->borrower_name = $_POST['borrower_name'];
+				$entry->borrower_id = $_POST['borrower_id'];
+				$entry->borrow_type = ($_POST['borrow_type']);
+				$entry->unit_id = $_POST['unit_id'];
+				$entry->receive_date = $_POST['receive_date'];
+				$entry->status_id = 0;//want to borrow
+				$entry->log_description = $_POST['log_description'];			
+				$ret = putNewLogEntry($db, $entry);
+				if($ret)
+					returnOK();
+				else
+					returnFAIL();
+				exit();
+				break;
 			default:
 		}
-		
+
 		if($ret)
 			returnObject($ret);
 		else
@@ -112,5 +104,5 @@ switch($_GET['aim']){
 	default:
 		returnOK();
 }
-	exit();
+exit();
 ?>

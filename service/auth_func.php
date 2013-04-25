@@ -9,7 +9,7 @@
  * 
  */ 
 
-
+include_once 'global.php';
 /**
  * 
  * For check user login
@@ -31,15 +31,15 @@ function do_login($db,$username, $password)
 	$result = $db->query($query);
 	$m = $result->fetch(PDO::FETCH_ASSOC);
 	if(empty($m)){
-		echo "<center><h1>There is no such user ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
+		//echo "<center><h1>There is no such user ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
 		return false;
 	}
-	print_r($m);
+	//print_r($m);
 	//TODO handle time stamp check here.
 	//TODO handle encoding password here.
 	
 	if($m['pass'] != $password) {
-		echo "<center><h1>Login attempt rejected for ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
+		//echo "<center><h1>Login attempt rejected for ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
 		return false;
 	}
 	session_start();
@@ -62,6 +62,20 @@ function do_logout()
 	return true;
 }
 
+
+function get_user_status()
+{
+	$user = new User();
+	session_start();
+	if(!$_SESSION['username'] || !$_SESSION['id'] || !$_SESSION['power'])
+		$user = null;
+	else{
+		$user->username = $_SESSION['username'];
+		$user->id = $_SESSION['id'];
+		$user->power = $_SESSION['power'];
+	}
+	return $user;
+}
 
 
 ?>

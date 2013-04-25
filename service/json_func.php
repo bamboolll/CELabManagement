@@ -13,7 +13,7 @@
 function returnOK()
 {
 	$ret = array('code'=>"OK");
-	header('Content-Type: application/json');
+	header('Mimetype=application/json');
 	echo json_encode($ret);
 }
 
@@ -25,7 +25,7 @@ function returnOK()
 function returnFAIL()
 {
 	$ret = array('code' => "FAIL");
-	header('Content-Type: application/json');
+	header('Mimetype=application/json');
 	echo json_encode($ret);
 }
 
