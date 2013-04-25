@@ -10,7 +10,7 @@
  */
 function openSqliteDB(){
 	//Create (connect) SQLite database in file
-	$db = new PDO('sqlite:../service/celab.sqlite');
+	$db = new PDO('sqlite:celab.sqlite');
 	//Set erromode to exceptions
 	$db->setAttribute(PDO::ATTR_ERRMODE,PDO::ERRMODE_EXCEPTION);
 	
