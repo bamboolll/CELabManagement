@@ -31,9 +31,11 @@ function do_login($db,$username, $password)
 	$result = $db->query($query);
 	$m = $result->fetch(PDO::FETCH_ASSOC);
 	if(empty($m)){
-
+<<<<<<< HEAD
 //		echo "<center><h1>There is no such user ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
-
+=======
+		//echo "<center><h1>There is no such user ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
+>>>>>>> 75bf8bbd8477aefc33250c96ba91ca5d4bd4f053
 		return false;
 	}
 	//print_r($m);
@@ -41,9 +43,11 @@ function do_login($db,$username, $password)
 	//TODO handle encoding password here.
 	
 	if($m['pass'] != $password) {
-
+<<<<<<< HEAD
 //		echo "<center><h1>Login attempt rejected for ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
-
+=======
+		//echo "<center><h1>Login attempt rejected for ".$username."!</h1><br /><a href=\"login.html\">Go to login page</a></center>";
+>>>>>>> 75bf8bbd8477aefc33250c96ba91ca5d4bd4f053
 		return false;
 	}
 	session_start();
@@ -71,16 +75,12 @@ function get_user_status()
 {
 	$user = new User();
 	session_start();
-	print_rdev($_SESSION);
-	if(!isset($_SESSION['username']) || !isset($_SESSION['id']) || !isset($_SESSION['power'])){
+	if(!$_SESSION['username'] || !$_SESSION['id'] || !$_SESSION['power'])
 		$user = null;
-		printdevln("user didn't login");
-	}
 	else{
 		$user->username = $_SESSION['username'];
 		$user->id = $_SESSION['id'];
 		$user->power = $_SESSION['power'];
-		printdevln("user success login");
 	}
 	return $user;
 }

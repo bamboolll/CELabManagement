@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+	<title>Welcome to Tran Huy Vu's homepage</title>
+	<link rel="stylesheet" href="mystyle.css">
+</head>
+<body>
+<div id="page">
+	<div id="header">
+		<h1>Tran Huy Vu's homepage</h1>
+	</div>
+	<div id="menu">
+		<img width=200 height=200 src="logo.jpg" align="middle"/>
+		<ul class="navbar">
+			<li><a href="index.htm">Home</a>
+			<li><a href="biography.php">Biography</a>
+			<li><a href="listdir.php?type=2">Courses</a>
+			<li><a href="research.php">Research</a>
+			<li><a href="listdir.php?type=1">Downloads</a>
+			<li><a href="pictures.php">Pictures</a>
+			<li><a href="relax.php">Entertainments</a>
+		</ul>
+		<object width="200" height="200">  <param name="movie" value="http://www.nhaccuatui.com/m/5FfygaXlFh" />  <param name="quality" value="high" />  <param name="wmode" value="transparent" />  <param name="allowscriptaccess" value="always" />  <embed src="http://www.nhaccuatui.com/m/5FfygaXlFh" flashvars="target=blank" allowscriptaccess="always" quality="high" wmode="transparent" type="application/x-shockwave-flash" width="200" height="200"></embed></object>
+	</div>
+	<div id="content">
+		
+	</div>
+	<div id="footer">
+	</div>
+</div>
+</body>
+</html>
