@@ -27,6 +27,7 @@ function returnFAIL()
 	$ret = array('code' => "FAIL");
 	header('Mimetype=application/json');
 	echo json_encode($ret);
+	exit();
 }
 
 
@@ -38,6 +39,7 @@ function returnObject($obj)
 {
 	//header('Content-Type: application/json');
 	echo json_encode($obj);
+	exit();
 }
 
 

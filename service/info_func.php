@@ -127,15 +127,75 @@ function getAvailableDeviceUnitByID($db,$id)
 }
 
 /**
+ * Get row from unit_id
+ * @param unknown $db
+ * @param unknown $unit_id
+ */
+function lookupDeviceUnit($db,$unit_id)
+{
+	$all="";
+	$query="SELECT * FROM DeviceUnit WHERE unit_id=".$unit_id;
+	try{
+		$result = $db->query($query);
+		$all = $result->fetchAll(PDO::FETCH_ASSOC);
+	}catch(PDOException $e)
+	{
+		printdevln($e->getMessage());
+	}
+	return $all;
+}
+
+/**
+ * Lookup device name
+ * @param unknown $db
+ * @param unknown $device_id
+ * @return unknown
+ */
+function lookupDeviceName($db, $device_id)
+{
+	$all="";
+	$query="SELECT * FROM DeviceName WHERE device_id=".$device_id;
+	try{
+		$result = $db->query($query);
+		$all = $result->fetchAll(PDO::FETCH_ASSOC);
+	}catch(PDOException $e)
+	{
+		printdevln($e->getMessage());
+	}
+	return $all;
+}
+
+
+/**
+ * Get borrowable device unit by ID and no pending request
+ *
+ */
+function getAvailableDeviceUnitByIDNoPending($db,$id)
+{
+	
+	//TODO;
+// 	$all="";
+// 	$query="SELECT * FROM DeviceUnit WHERE device_id=".$id." and status=1";
+// 	try{
+// 		$result = $db->query($query);
+// 		$all = $result->fetchAll(PDO::FETCH_ASSOC);
+// 	}catch(PDOException $e)
+// 	{
+// 		printdevln($e->getMessage());
+// 	}
+// 	return $all;
+}
+
+/**
  *  getAll Log which status is dang muon.
  *  $db: 
  *  $type: borrow type home or lab
  */
 function getAllLogsByTypeStatus($db,$type,$status){
 	$all="";
-	if(!$status && !empty($status))
+	if(!isset($status))
 		$status = 1; // dang muon
-	if($type && !empty($type))
+	if(isset($type))
 		$query="SELECT * FROM LabLog WHERE borrow_type=".$type." and status_id=".$status;
 	else
 		$query="SELECT * FROM LabLog WHERE status_id=".$status;
@@ -157,7 +217,7 @@ function getAllLogsByTypeStatus($db,$type,$status){
  */
  function getAllPendingLogsByType($db,$type){
 	$all="";
-	if($type && !empty($type))
+	if(isset($type))
 		$query="SELECT * FROM LabLog WHERE borrow_type=".$type." AND (status_id=0 OR status_id=2)";
 	else
 		$query="SELECT * FROM LabLog WHERE (status_id=0 OR status_id=2)";

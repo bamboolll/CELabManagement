@@ -32,4 +32,10 @@ class LogEntry {
 	public $log_description="";
 }
 
+function print_rdev($object){
+	global $DEBUG;
+	if($DEBUG)
+		print_r($object);
+}
+
 ?>

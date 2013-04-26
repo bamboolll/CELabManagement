@@ -67,12 +67,16 @@ function get_user_status()
 {
 	$user = new User();
 	session_start();
-	if(!$_SESSION['username'] || !$_SESSION['id'] || !$_SESSION['power'])
+	print_rdev($_SESSION);
+	if(!isset($_SESSION['username']) || !isset($_SESSION['id']) || !isset($_SESSION['power'])){
 		$user = null;
+		printdevln("user didn't login");
+	}
 	else{
 		$user->username = $_SESSION['username'];
 		$user->id = $_SESSION['id'];
 		$user->power = $_SESSION['power'];
+		printdevln("user success login");
 	}
 	return $user;
 }

@@ -19,12 +19,25 @@ if(!$_GET['aim']){
 }
 switch($_GET['aim']){
 	case "device_name":
-		$scope = "all"; //another scope is search.
-		//$scope = $_GET['scope'];
-		$all = getAllDevices($db);
-		//echo "dlskfjldsf";
-		if($all)
-			returnObject($all);
+		$scope = $_GET['scope'];
+		$ret;
+		if(!$scope){
+			returnFAIL();
+			exit();
+		} 
+		switch($scope){
+			case "all":
+				$ret = getAllDevices($db);
+				break;
+			case "lookup":
+				$device_id = $_GET['device_id'];
+				$ret = lookupDeviceName($db, $device_id);
+				break;				
+			default:
+				break;
+		}
+		if($ret)
+			returnObject($ret);
 		else
 			returnFAIL();
 	break;
@@ -50,7 +63,9 @@ switch($_GET['aim']){
 			case "available":
 				$id = $_GET['dev_id'];
 				$ret = getAvailableDeviceUnitByID($db,$id);
-				
+			case "lookup":
+				$unit_id = $_GET['unit_id'];
+				$ret = lookupDeviceUnit($db,$unit_id);	
 			break;
 			default:
 		}
@@ -95,11 +110,20 @@ switch($_GET['aim']){
 			case "pending":
 				$ret = getAllPendingLogsByType($db,$btype);
 			break;
+			case "pending_borrow":
+				$ret = getAllLogsByTypeStatus($db,$btype,0);
+			break;
+			case "pending_return":
+				$ret = getAllLogsByTypeStatus($db,$btype,4);
+			break;
 			case "returned":
 				$ret = getAllLogsByTypeStatus($db,$btype,3);
 			break;
 			case "borrowed":
 				$ret = getAllLogsByTypeStatus($db,$btype,1);
+			break;
+			case "rejected":
+				$ret = getAllLogsByTypeStatus($db,$btype,5);
 			break;
 			default:
 		}
