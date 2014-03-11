@@ -26,8 +26,8 @@ function openSqliteDB(){
 function openMySQLDB(){
 	//Create (connect) SQLite database in file
 	$dsn  = 'mysql:host=localhost;dbname=celabdb';
-	$username = 'root';
-	$password = 'root';
+	$username = 'celabroot';
+	$password = 'celabpassroot';
 	$options = array(
     PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
     ); 

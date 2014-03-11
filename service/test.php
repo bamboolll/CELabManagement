@@ -16,7 +16,8 @@ include 'auth_func.php';
 include 'db_func.php';
 
 $parent = "test.php";
-$db = openSqliteDB();
+//$db = openSqliteDB();
+$db = openMySQLDB();
 if(!$_GET['what']){
 	echo "What's up??";
 	exit();
