@@ -1,5 +1,8 @@
 package edu.hcmut.cse.celab.Common;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * Created with IntelliJ IDEA.
  * User: heckarim
@@ -12,5 +15,11 @@ public class CommonFunction {
     public static void println(String tag, String s){
         System.out.println(tag + ": " + s);
 
+    }
+
+    public static String getTimeInFormat(){
+        Date date = new Date();
+        String s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        return s;
     }
 }

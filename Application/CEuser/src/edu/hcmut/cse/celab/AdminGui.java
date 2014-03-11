@@ -3,6 +3,8 @@ package edu.hcmut.cse.celab;
 import edu.hcmut.cse.celab.server.ServerWrapper;
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
+
 import static edu.hcmut.cse.celab.Common.CommonFunction.println;
 
 /**
@@ -15,6 +17,7 @@ import static edu.hcmut.cse.celab.Common.CommonFunction.println;
 public class AdminGui extends SimpleGui {
 
     private static final String TAG = "AdminGui";
+    private AdminForm pendingDialog;
 
     public static void main(String[] args){
         new AdminGui().run();
@@ -53,12 +56,28 @@ public class AdminGui extends SimpleGui {
         }
         return false;
     }
+    public boolean doLogin(String username, char[] password){
+        String tag = TAG + ".doLogin()";
+        String pass = new String(password);
+        Document doc = this.serverWrapper.doLogin(username,pass);
+        if(doc != null){
+            doc.text();
+            if(doc.text().contains("OK")){
+                println(tag,"Successfull login");
+                return true;
+            }
+            else
+                return false;
+        }
+        return false;
+    }
 
     public void onSuccessLogin() {
         this.loginDialog.dispose();
-        AdminForm dialog = new AdminForm(this);
-        dialog.pack();
-        dialog.setVisible(true);
+        pendingDialog = new AdminForm(this);
+        pendingDialog.pack();
+        pendingDialog.setVisible(true);
+        pendingDialog.onRefersh();
     }
 
     public void onUnSuccessLogin() {
@@ -88,23 +107,29 @@ public class AdminGui extends SimpleGui {
     }
 
     public void doRejectLogEntry() {
-        boolean ret = this.serverWrapper.doRejectLogEntry(this.selectedEntry);
-        if(ret){
-            //update status
-            //add to history
-
+        ServerWrapper.LabLogObject logRet = this.serverWrapper.doRejectLogEntry(this.selectedEntry);
+        if(logRet == null)
+            return;
+        if(logRet.isOK()){
+            this.considerDialog.dispose();
+            pendingDialog.doUpdateHistory(this.selectedEntry,false);
         }
-        //TODO notify unsuccess
+        this.considerDialog.setStatus(logRet);
+        this.updateLogs(logRet);
+
     }
 
     public void doAcceptLogEntry() {
-        boolean ret = this.serverWrapper.doApproveLogEntry(this.selectedEntry);
-        if(ret){
+        ServerWrapper.LabLogObject logRet = this.serverWrapper.doApproveLogEntry(this.selectedEntry);
+        if(logRet.isOK()){
             this.considerDialog.dispose();
-
-        }else{
-            this.considerDialog.setFailureStatus();
+            pendingDialog.doUpdateHistory(this.selectedEntry, true);
         }
-        //
+        this.considerDialog.setStatus(logRet);
+        this.updateLogs(logRet);
+    }
+
+    private void updateLogs(ServerWrapper.LabLogObject logRet) {
+       this.pendingDialog.updateLogs(logRet);
     }
 }

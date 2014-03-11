@@ -19,7 +19,8 @@ if($DEBUG){
 }
 
 $parent = "test.php";
-$db = openSqliteDB();
+//$db = openSqliteDB();
+$db = openMySQLDB();
 if(!$_GET['what']){
 	echo "What's up??";
 	exit();
@@ -63,13 +64,16 @@ switch($_GET['what']){
 			exit();
 		}
 		if($_GET['want'] == "read"){
-			printdevln("Want to read");
+			printdevln("Want to read ");
 			include 'request_read.php';
 			
 		}else if($_GET['want'] == "write"){
-			printdevln("Want to write");
+			printdevln("Want to write ");
 			include 'request_write.php';
-		}else{
+		}else if($_GET['want'] == "search"){
+			printdevln("Want to search ");
+			include 'request_search.php';
+		}else {
 			printdevln("ambitious request");
 			exit();
 		}

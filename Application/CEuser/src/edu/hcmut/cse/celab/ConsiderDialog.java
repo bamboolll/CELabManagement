@@ -1,5 +1,6 @@
 package edu.hcmut.cse.celab;
 
+import edu.hcmut.cse.celab.server.ServerWrapper;
 import org.omg.IOP.TAG_ALTERNATE_IIOP_ADDRESS;
 
 import javax.swing.*;
@@ -26,6 +27,8 @@ public class ConsiderDialog extends JDialog {
     private JTextField tf_name;
     private JTextField tf_id;
     private JLabel lbl_status;
+    private JPanel jplRequestInfo;
+    private JPanel jplButton;
     private AdminGui adminGui;
 
     public ConsiderDialog() {
@@ -130,6 +133,7 @@ public class ConsiderDialog extends JDialog {
             this.adminGui.selectedEntry.log_description = ta_description.getText();
         }
         this.adminGui.doAcceptLogEntry();
+        //dispose();
 
     }
 
@@ -191,12 +195,19 @@ public class ConsiderDialog extends JDialog {
 
         }
 
-
-
-
-    }
+   }
 
     public void setFailureStatus() {
         lbl_status.setText("FAILURE - try again");
+    }
+
+    public void setStatus(ServerWrapper.LabLogObject logRet) {
+        String status  = logRet.getFistNotes();
+        if(logRet.isOK())
+            this.lbl_status.setText("Successful!!!");
+        else
+            this.lbl_status.setText("UnSuccessful " + status);
+
+
     }
 }

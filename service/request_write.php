@@ -85,7 +85,7 @@ switch($_GET['aim']){
 			case "request_borrow":
 				//check user level
 				if($user->power > 1) //must be 0 root or 1 normal user.
-					returnFAIL();
+					returnFAILWithNote("Don't have enough access right");
 					
 				//get parameter
 				$entry = new LogEntry();
@@ -109,15 +109,9 @@ switch($_GET['aim']){
 					returnFAIL();
 				//get parameter
 				$entry = new LogEntry();
-				$entry->borrower_name = $_POST['borrower_name'];
-				$entry->borrower_id = $_POST['borrower_id'];
-				$entry->borrow_type = ($_POST['borrow_type']);
-				$entry->unit_id = $_POST['unit_id'];
-				$entry->receive_date = $_POST['receive_date'];
+				$entry->log_id = $_POST['log_id'];
 				$entry->return_date = $_POST['return_date'];
-				$entry->status_id = 2;//want to return
-				$entry->log_description = $_POST['log_description'];
-				$ret = putNewLogEntry($db, $entry);
+				$ret = updateLogEntryRequestReturn($db, $entry);
 				if($ret)
 					returnOK();
 				else
@@ -147,28 +141,78 @@ switch($_GET['aim']){
 					returnFAIL();
 				exit();
 				break;
-				case "reject":
-					//check user power
-					if($user->power>0) // must be root to do this kind of action
-						returnFAIL();
-					//get parameter
-					$entry = new LogEntry();
-					$entry->log_id = $_POST['log_id'];
-					$entry->borrower_name = $_POST['borrower_name'];
-					$entry->borrower_id = $_POST['borrower_id'];
-					$entry->borrow_type = ($_POST['borrow_type']);
-					$entry->unit_id = $_POST['unit_id'];
-					$entry->receive_date = $_POST['receive_date'];
-					$entry->return_date = $_POST['return_date'];
-					$entry->status_id = $_POST['status_id'];//don't care
-					$entry->log_description = $_POST['log_description'];
-					$ret = putRejectLogEntry($db, $entry);
-					if($ret)
-						returnOK();
-					else
-						returnFAIL();
-					exit();
-					break;
+			case "approve_return":
+				//check user power
+				if($user->power>0) // must be root to do this kind of action
+					returnFAILWithNote("Don't have enough access right");
+				//get parameter
+				$entry = new LogEntry();
+				$entry->log_id = $_POST['log_id'];
+				$entry->borrower_name = $_POST['borrower_name'];
+				$entry->borrower_id = $_POST['borrower_id'];
+				//$entry->borrow_type = ($_POST['borrow_type']);
+				$entry->unit_id = $_POST['unit_id'];
+				$entry->receive_date = $_POST['receive_date'];
+				$entry->return_date = $_POST['return_date'];
+				$entry->status_id = $_POST['status_id'];//want to return or want to borrow
+				$entry->log_description = $_POST['log_description'];
+				$ret = putApproveReturnLogEntry($db, $entry);
+				if(isset($ret))
+					returnObject($ret);
+				else
+					returnFAIL();
+				exit();
+				break;
+			case "approve_borrow":
+				//check user power
+				if($user->power>0) // must be root to do this kind of action
+					returnFAILWithNote("Don't have enough access right");
+				//get parameter
+				$entry = new LogEntry();
+				$entry->log_id = $_POST['log_id'];
+				$entry->borrower_name = $_POST['borrower_name'];
+				$entry->borrower_id = $_POST['borrower_id'];
+				$entry->borrow_type = ($_POST['borrow_type']);
+				$entry->unit_id = $_POST['unit_id'];
+				$entry->receive_date = $_POST['receive_date'];
+				$entry->log_description = $_POST['log_description'];
+				$ret = putApproveBorrowLogEntry($db, $entry);
+				if(isset($ret))
+					returnObject($ret);
+				else
+					returnFAIL();
+				exit();
+				break;
+			case "reject_borrow":
+				//check user power
+				if($user->power>0) // must be root to do this kind of action
+					returnFAILWithNote("Don't have enough access right");
+				//get parameter
+				$entry = new LogEntry();
+				$entry->log_id = $_POST['log_id'];
+				$entry->log_description = $_POST['log_description'];
+				$ret = putRejectBorrowLogEntry($db, $entry);
+				if(isset($ret))
+					returnObject($ret);
+				else
+					returnFAIL();
+				exit();
+				break;
+			case "reject_return":
+				//check user power
+				if($user->power>0) // must be root to do this kind of action
+					returnFAIL();
+				//get parameter
+				$entry = new LogEntry();
+				$entry->log_id = $_POST['log_id'];
+				$entry->log_description = $_POST['log_description'];
+				$ret = putRejectReturnLogEntry($db, $entry);
+				if(isset($ret))
+					returnObject($ret);
+				else
+					returnFAIL();
+				exit();
+				break;
 			default:
 		}
 

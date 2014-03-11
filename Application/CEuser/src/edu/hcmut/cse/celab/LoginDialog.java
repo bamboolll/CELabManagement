@@ -8,7 +8,7 @@ public class LoginDialog extends JDialog {
     private JButton btn_OK;
     private JButton btn_Cancel;
     private JTextField tf_username;
-    private JTextField tf_password;
+    private JPasswordField tf_password;
     private SimpleGui gui;
 
     public LoginDialog() {
@@ -79,7 +79,7 @@ public class LoginDialog extends JDialog {
     }
 
     private void onOK() {
-        if(this.gui.doLogin(tf_username.getText(),tf_password.getText())){
+        if(this.gui.doLogin(tf_username.getText(), tf_password.getPassword())){
             this.gui.onSuccessLogin();
             dispose();
         }

@@ -20,7 +20,7 @@ import java.util.Map;
 public class ServerInterface {
     private Map<String, String> cookies;
     private String cookie_key ="PHPSESSID";
-    public String hostBaseUrl="http://localhost/celab/server.php";
+    public String hostBaseUrl="http://172.28.11.196/celab/service/server.php";
     public static void main(String[] args) throws IOException {
         new ServerInterface().doTest();
     }
@@ -110,6 +110,8 @@ public class ServerInterface {
         Connection.Response res = null;
         if (map == null)
             map = new HashMap<String, String>();
+        System.out.println(baseUrl);
+        System.out.println(map.toString());
         try {
             res = Jsoup.connect(baseUrl)
                     .method(Connection.Method.POST)

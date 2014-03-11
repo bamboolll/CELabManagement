@@ -5,6 +5,7 @@
 */
 
 $DEBUG = false;
+$DEBUG_JSON = true;
 
 
 function printdevln($string){
@@ -36,6 +37,13 @@ function print_rdev($object){
 	global $DEBUG;
 	if($DEBUG)
 		print_r($object);
+}
+
+function print_dbg_obj($object,$string){
+	global $DEBUG_JSON;
+	if($DEBUG_JSON){
+		$object->debug = $object->debug."+".$string;
+	}
 }
 
 ?>

@@ -12,6 +12,12 @@ import static edu.hcmut.cse.celab.Common.CommonFunction.println;
  * To change this template use File | Settings | File Templates.
  */
 public class LogEntry {
+    public static final int STATUS_WANT_BORROW = 0;
+    public static final int STATUS_BORROWED = 1;
+    public static final int STATUS_WANT_RETURN = 2;
+    public static final int STATUS_RETURNED = 3;
+    public static final int STATUS_REJECT = 5;
+
     public int log_id;
     public int unit_id;
     public String borrower_id="";
@@ -29,26 +35,25 @@ public class LogEntry {
     public void dump() {
         String tag = "LogEntry.dump()";
         println(tag,log_id +"-"+ unit_id +"-"+ borrow_type +"-"+ borrower_id +"-"+ borrower_name +"-"+ return_date +"-"+ receive_date +"-"+ status_id +"-"+ log_description);
+        println(tag,device_name + "-" + device_id  +"-" + unit_code);
     }
 
     public String toString(){
-        String s = device_name + " - " + unit_code + " - " + borrower_name + " - " + borrower_id;
-        if(borrow_type == 0)
-            s = s + " - " + "InLab";
-        else
-            s = s + " - " + "OutLab";
-        if(status_id == 0)
-            s = s + " -" + "Borrow";
-        else if(status_id == 2)
-            s= s + "-" + "Return";
-        s = s + " - " + receive_date;
-        s = s + " - " + return_date;
+        String s =   borrower_name + "(" + borrower_id + ")" +  " - " +device_name;
+//        if(borrow_type == 0)
+//            s = s + "-" + "Inside";
+//        else
+//            s = s + "-" + "Outside";
+//        if(status_id == 0)
+//            s = s + "-" + "Borrow";
+//        else if(status_id == 2)
+//            s= s + "-" + "Return";
 
         return s;
     }
 
     /*
-    gurantee no variable is null
+    guarantee no variable is null
      */
     public void formatDAta() {
         if(log_description == null)

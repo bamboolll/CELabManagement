@@ -1,79 +1,78 @@
 package edu.hcmut.cse.celab;
 
-import com.sun.deploy.config.JCPConfig;
+import edu.hcmut.cse.celab.Common.CommonFunction;
+import edu.hcmut.cse.celab.Common.Log;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class RequestForm extends JDialog {
+    private static final String TAG = "RequestForm" ;
     private JPanel contentPane1;
-    private JButton buttonOK;
-    private JButton buttonCancel;
-    private JComboBox cb_devname;
-    private JComboBox comboBox2;
-    private JTextField tf_time;
+    private JButton btnOK;
+    private JButton btnCancel;
+    private JComboBox cbDevName;
+    private JComboBox cbDevUnit;
+    private JTextField tfTime;
     private JRadioButton insideLabRadioButton;
     private JRadioButton outsideLabRadioButton;
-    private JTextField tf_name;
-    private JTextField tf_id;
-    private JPanel content;
+    private JTextField tfUserName;
+    private JTextField tfUserID;
+    private JPanel jplBorrow;
     private JLabel lbl_status;
-    private JTextArea ta_notes;
+    private JTextArea taNotes;
     private JTabbedPane tabbedPane1;
-    private JList list1;
-    private JTextField textField1;
-    private JTextField textField2;
+    private JComboBox cbStudentInfoRet;
+    private JTextField tfTimeRet;
+    private JRadioButton insideLabRadioButton1;
+    private JRadioButton outsideLabRadioButton1;
+    private JTextArea taNoteRet;
+    private JList lstStatusRet;
+    private JTextField tfTimeBorrowRet;
+    private JButton btnRefresh;
+    private JTextField tfDevicenameRet;
+    private JTextField tfDeviceUnitRet;
+    private JButton btnSearchRet;
+    private JLabel lblStatusRet;
+    private JPanel jplReturn;
     private SimpleGui gui;
 
-    public RequestForm() {
-        setContentPane(contentPane1);
-        setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+    /*
+     * Load search form
+     */
+    private void onSearchReturnClick() {
+        Log.d(TAG,"onSearchClick");
+        SearchDialog dialog = new SearchDialog(this);
+        dialog.pack();
+        dialog.setVisible(true);
+    }
 
-        buttonOK.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onOK();
-            }
-        });
-
-        buttonCancel.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        });
-
-// call onCancel() when cross is clicked
-        setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-        addWindowListener(new WindowAdapter() {
-            public void windowClosing(WindowEvent e) {
-                onCancel();
-            }
-        });
-
-// call onCancel() on ESCAPE
-        contentPane1.registerKeyboardAction(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                onCancel();
-            }
-        }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+    /**
+     * if Tab return => need to get available borrower.
+     *
+     */
+    private void onTabChange() {
+        Log.d(TAG, "on TabChange");
     }
 
     public RequestForm(SimpleGui simpleGui) {
         this.gui = simpleGui;
         setContentPane(contentPane1);
         setModal(true);
-        getRootPane().setDefaultButton(buttonOK);
+        getRootPane().setDefaultButton(btnOK);
 
-        buttonOK.addActionListener(new ActionListener() {
+        btnOK.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onOK();
             }
         });
 
-        buttonCancel.addActionListener(new ActionListener() {
+        btnCancel.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 onCancel();
             }
@@ -95,7 +94,7 @@ public class RequestForm extends JDialog {
         }, KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
         this.doLoadContent();
 
-        cb_devname.addActionListener(new ActionListener() {
+        cbDevName.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 DeviceNameItem item = (DeviceNameItem) ((JComboBox)e.getSource()).getSelectedItem();
@@ -104,7 +103,7 @@ public class RequestForm extends JDialog {
             }
         });
 
-        comboBox2.addActionListener(new ActionListener() {
+        cbDevUnit.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
@@ -112,6 +111,51 @@ public class RequestForm extends JDialog {
                 onDeviceUnitChange(item);
             }
         });
+        btnSearchRet.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onSearchReturnClick();
+            }
+        });
+        tabbedPane1.addChangeListener(new ChangeListener() {
+            @Override
+            public void stateChanged(ChangeEvent e) {
+                onTabChange();
+            }
+        });
+
+        cbStudentInfoRet.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if(e.getStateChange() == ItemEvent.SELECTED){
+                    Object item = e.getItem();
+                    doOnStudentInfoItemSelected(item);
+                }
+            }
+        });
+
+        btnRefresh.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onReferesh();
+            }
+        });
+    }
+
+    private void onReferesh() {
+       this.doLoadContent();
+    }
+
+    private void doOnStudentInfoItemSelected(Object item) {
+
+
+        LogEntry logEntry = (LogEntry) item;
+        Log.d(TAG,"Itemclick studentinfo");
+        logEntry.dump();
+        this.tfDevicenameRet.setText(logEntry.device_name);
+        this.tfDeviceUnitRet.setText(""+logEntry.device_id);
+        this.tfTimeBorrowRet.setText(logEntry.receive_date);
+        this.tfTimeRet.setText(CommonFunction.getTimeInFormat());
     }
 
     private void onDeviceUnitChange(DeviceUnitItem item) {
@@ -122,8 +166,9 @@ public class RequestForm extends JDialog {
 
     private void doUpdateTime() {
         Date date = new Date();
-        String s = new SimpleDateFormat("yyyy-mm-dd HH:mm:ss").format(date);
-        this.tf_time.setText(s);
+        String s = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+        this.tfTime.setText(s);
+        this.tfTimeRet.setText(s);
         this.request.date = s;
     }
 
@@ -137,9 +182,9 @@ public class RequestForm extends JDialog {
             lbl_status.setText("Error when gettting device unit");
             return;
         }
-        comboBox2.removeAllItems();
+        cbDevUnit.removeAllItems();
         for(DeviceUnitItem it: listUnit){
-            comboBox2.addItem(it);
+            cbDevUnit.addItem(it);
         }
         this.onDeviceUnitChange(listUnit.get(0));
 
@@ -152,31 +197,51 @@ public class RequestForm extends JDialog {
             return;
         }
         //update combox
-        comboBox2.removeAllItems();
+        cbDevUnit.removeAllItems();
+        cbDevName.removeAllItems();
         for(DeviceNameItem item : listDev){
-            cb_devname.addItem(item);
-            //cb_devname.add
-           // cb_devname.add(item.device_name);
+            cbDevName.addItem(item);
+            //cbDevName.add
+           // cbDevName.add(item.device_name);
         }
-        this.onDevicenameChange(listDev.get(0));
-
+        cbDevName.setSelectedIndex(0);
+        this.onDevicenameChange((DeviceNameItem) cbDevName.getSelectedItem());
     }
 
     private void onOK() {
+        //check current tab
+        if(this.tabbedPane1.getSelectedIndex()==0){//Tab want to borrow
         //check name and id
-        if(tf_name.getText().isEmpty() || tf_id.getText().isEmpty()){
+        if(tfUserName.getText().isEmpty() || tfUserID.getText().isEmpty()){
             lbl_status.setText("Please fill in name and id");
             return;
         }
         this.doUpdateTime();
-        this.request.name = tf_name.getText();
-        this.request.id = tf_id.getText();
-        this.request.type= insideLabRadioButton.isSelected()?0:1;
-        this.request.description = ta_notes.getText();
-        if(!this.gui.doSendRequest(this.request))
-            lbl_status.setText("Unsuccessful - please try again");
-        else
-            lbl_status.setText("Successful request - please contact Lab Keeper");
+        this.request.name = tfUserName.getText();
+        this.request.id = tfUserID.getText();
+        this.request.type= insideLabRadioButton.isSelected()?RequestStructure.WANT_BORROW_INSIDE:RequestStructure.WANT_BORROW_OUTSIDE;
+        this.request.description = taNotes.getText();
+
+        }else{//Tab want to return
+            LogEntry log;
+            if(cbStudentInfoRet.getItemCount() <0)
+                return;
+            log = (LogEntry) this.cbStudentInfoRet.getItemAt(this.cbStudentInfoRet.getSelectedIndex());
+            this.request.log_id = log.log_id;
+            this.request.date = CommonFunction.getTimeInFormat();
+            this.request.type = RequestStructure.WANT_RETURN;
+        }
+        if(this.tabbedPane1.getSelectedIndex()==0){
+            if(!this.gui.doSendRequest(this.request))
+                lbl_status.setText("Unsuccessful - please try again");
+            else
+                lbl_status.setText("Successful request - please contact Lab Keeper");
+        }else{
+            if(!this.gui.doSendRequest(this.request))
+                lblStatusRet.setText("Unsuccessful - please try again");
+            else
+                lblStatusRet.setText("Successful request - please contact Lab Keeper");
+        }
     }
 
     private void onCancel() {
@@ -185,9 +250,25 @@ public class RequestForm extends JDialog {
     }
 
     public static void main(String[] args) {
-        RequestForm dialog = new RequestForm();
+        RequestForm dialog = new RequestForm(null);
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    public void setSearch(String name, String id) {
+        Log.d(TAG,"call setSEarach " + name + ", " + id);
+        ArrayList<LogEntry> listLog = this.gui.serverWrapper.searchListLogBorrower(name, id,1);
+        if(listLog == null){
+            this.cbStudentInfoRet.removeAllItems();
+            lblStatusRet.setText("Error on searching, do again!!");
+            return;
+        }
+        //update combox
+        cbStudentInfoRet.removeAllItems();
+        for(LogEntry item : listLog){
+            cbStudentInfoRet.addItem(item);
+        }
+        lblStatusRet.setText("Search return: " + listLog.size() + " matched");
     }
 }

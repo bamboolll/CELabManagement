@@ -17,12 +17,32 @@ function openSqliteDB(){
 	return $db;
 }
  
- 
+
+/**
+ *  
+ * return $db _ mysql pdo db.
+ * 
+ */
+function openMySQLDB(){
+	//Create (connect) SQLite database in file
+	$dsn  = 'mysql:host=localhost;dbname=celabdb';
+	$username = 'root';
+	$password = 'root';
+	$options = array(
+    PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+    ); 
+	//Set erromode to exceptions
+	$db = new PDO($dsn, $username, $password, $options);
+	
+	return $db;
+}
+
+
  /**
   * Close DB 
   *
   */
-function closeSqliteDB($db){
+function closeMySQLDB($db){
 	try{
 		$db = null;
 	}catch(PDOException $e){
@@ -32,6 +52,5 @@ function closeSqliteDB($db){
 	}
 	return true;
 }
-
 
 ?>

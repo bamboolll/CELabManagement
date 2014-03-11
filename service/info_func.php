@@ -162,6 +162,8 @@ function lookupDeviceName($db, $device_id)
 	{
 		printdevln($e->getMessage());
 	}
+	printdevln("got result");
+	printdevln(json_encode($all));
 	return $all;
 }
 
@@ -186,49 +188,6 @@ function getAvailableDeviceUnitByIDNoPending($db,$id)
 // 	return $all;
 }
 
-/**
- *  getAll Log which status is dang muon.
- *  $db: 
- *  $type: borrow type home or lab
- */
-function getAllLogsByTypeStatus($db,$type,$status){
-	$all="";
-	if(!isset($status))
-		$status = 1; // dang muon
-	if(isset($type))
-		$query="SELECT * FROM LabLog WHERE borrow_type=".$type." and status_id=".$status;
-	else
-		$query="SELECT * FROM LabLog WHERE status_id=".$status;
-	try{
-		$result = $db->query($query);
-		$all = $result->fetchAll(PDO::FETCH_ASSOC);
-	}catch(PDOException $e)
-	{
-		printdevln($e->getMessage());
-	}
-	return $all;
-}
 
-/**
- * 
- * 
- * 
- * 
- */
- function getAllPendingLogsByType($db,$type){
-	$all="";
-	if(isset($type))
-		$query="SELECT * FROM LabLog WHERE borrow_type=".$type." AND (status_id=0 OR status_id=2)";
-	else
-		$query="SELECT * FROM LabLog WHERE (status_id=0 OR status_id=2)";
-	try{
-		$result = $db->query($query);
-		$all = $result->fetchAll(PDO::FETCH_ASSOC);
-	}catch(PDOException $e)
-	{
-		printdevln($e->getMessage());
-	}
-	return $all;	
- }
 
 ?>

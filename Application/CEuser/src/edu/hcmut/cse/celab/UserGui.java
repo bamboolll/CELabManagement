@@ -57,6 +57,12 @@ public class UserGui extends SimpleGui {
         return false;
     }
 
+    public boolean doLogin(String username, char[] password){
+        String pass = new String(password);
+        return this.doLogin(username,pass);
+
+    }
+
     public void onSuccessLogin() {
         logindialog.dispose();
         RequestForm dialog = new RequestForm(this);

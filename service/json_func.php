@@ -24,11 +24,28 @@ function returnOK()
  */
 function returnFAIL()
 {
-	$ret = array('code' => "FAIL");
-	header('Mimetype=application/json');
-	echo json_encode($ret);
-	exit();
+    $ret->code = "FAIL";
+    $ret->notes= array();	
+    header('Mimetype=application/json');
+    echo json_encode($ret);
+    exit();
 }
+
+
+/**
+ * Return Failure along with object
+ * 
+ */
+function returnFAILWithNote($note)
+{
+    $ret->code = "FAIL";
+    $ret->notes= array();
+    array_push($ret->notes,$note);	
+    header('Mimetype=application/json');
+    echo json_encode($ret);
+    exit();
+}
+
 
 
 /**
@@ -37,10 +54,23 @@ function returnFAIL()
  */
 function returnObject($obj)
 {
-	//header('Content-Type: application/json');
+	header('Mimetype=application/json');
 	echo json_encode($obj);
 	exit();
 }
+
+function returnObjOk($obj)
+{
+	$obj->code = 'OK';
+	returnObject($obj);
+}
+
+function returnObjFail($obj)
+{
+	$obj->code = 'FAIL';
+	returnObject($obj);
+}
+
 
 
 ?>

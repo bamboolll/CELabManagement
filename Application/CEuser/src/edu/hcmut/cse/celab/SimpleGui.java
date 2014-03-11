@@ -2,6 +2,8 @@ package edu.hcmut.cse.celab;
 
 import edu.hcmut.cse.celab.server.ServerWrapper;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: heckarim
@@ -26,5 +28,10 @@ public class SimpleGui {
 
     public boolean doSendRequest(RequestStructure request) {
         return false;  //To change body of created methods use File | Settings | File Templates.
+    }
+
+
+    public boolean doLogin(String text, char[] password) {
+        return false;
     }
 }

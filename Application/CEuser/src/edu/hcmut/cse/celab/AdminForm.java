@@ -1,5 +1,9 @@
 package edu.hcmut.cse.celab;
 
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory;
+import edu.hcmut.cse.celab.Common.Log;
+import edu.hcmut.cse.celab.server.ServerWrapper;
+
 import javax.swing.*;
 import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
@@ -14,6 +18,7 @@ public class AdminForm extends JDialog {
     private JList lst_Pending;
     private JList lst_history;
     private JLabel lbl_status;
+    private JList lst_log;
     private AdminGui adminGui;
 
     public AdminForm() {
@@ -90,16 +95,31 @@ public class AdminForm extends JDialog {
         });
         lst_Pending.setModel(listModelPedning);
 
+        lst_history.setModel(listModelHistory);
+
+        lst_log.setModel(listModelLogs);
+        onRefersh();
     }
+
+    DefaultListModel<String> listModelLogs = new DefaultListModel<String>();
     DefaultListModel<LogEntry> listModelPedning = new DefaultListModel<LogEntry>();
-    private void onRefersh() {
+    DefaultListModel<HistoryConsideredRequest> listModelHistory = new DefaultListModel<HistoryConsideredRequest>();
+    public void onRefersh() {
+        Log.d("AdminForm", "call onreferesh");
         //Get all pending request.
+        String status = "contacting server";
+        this.lbl_status.setText(status);
         ArrayList<LogEntry> listPendingEntry = this.adminGui.serverWrapper.getPendingRequest();
-        //TODO update lsit
         listModelPedning.removeAllElements();
-        for(LogEntry item : listPendingEntry){
-            listModelPedning.addElement(item);
+        if(listPendingEntry !=  null){
+            for(LogEntry item : listPendingEntry){
+                listModelPedning.addElement(item);
+            }
+            status = "Has " + listPendingEntry.size() + " requests";
         }
+        status = " Has no new request";
+        this.lbl_status.setText(status);
+
     }
 
 
@@ -110,10 +130,13 @@ public class AdminForm extends JDialog {
             sel = listModelPedning.get(selected);
         else
             return;
-
-        lbl_status.setText(sel.toString());
+        this.updateStatus(sel.toString());
         this.adminGui.setSelectedLogEntry(sel);
         this.adminGui.loadConsiderDialog();
+    }
+
+    private void updateStatus(String str){
+        lbl_status.setText(str);
     }
 
     private void onCancel() {
@@ -126,5 +149,39 @@ public class AdminForm extends JDialog {
         dialog.pack();
         dialog.setVisible(true);
         System.exit(0);
+    }
+
+    public void updateLogs(ServerWrapper.LabLogObject logRet) {
+        ArrayList<String> notes = logRet.getNotes();
+        if(notes != null){
+            for (int i = 0; i<notes.size(); i++){
+                this.listModelLogs.addElement(notes.get(i));
+            }
+        }
+    }
+
+    public class HistoryConsideredRequest{
+        LogEntry logEntry;
+        boolean approve;
+
+        public HistoryConsideredRequest(LogEntry logEntry, boolean approve) {
+            this.logEntry = logEntry;
+            this.approve = approve;
+        }
+
+        public String toString(){
+            String apprv = approve?"Accept-":"Reject-";
+            return apprv+logEntry.toString();
+        }
+    }
+    public void doUpdateHistory(LogEntry logEntry, boolean approve) {
+        HistoryConsideredRequest his = new HistoryConsideredRequest(logEntry, approve);
+        //listModelHistory.removeAllElements();
+        listModelHistory.addElement(his);
+        if(approve){
+            this.updateStatus("Accept " + logEntry.toString());
+        }else
+            this.updateStatus("Reject " + logEntry.toString());
+        onRefersh();
     }
 }
